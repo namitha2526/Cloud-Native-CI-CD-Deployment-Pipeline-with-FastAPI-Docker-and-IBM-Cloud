@@ -55,3 +55,15 @@ Triggers AWS ECS service deployment
 🔹 Postman API Testing
 
 Includes a ready-to-use Postman collection for validation.
+---
+Architecture
+Developer → GitHub → GitHub Actions CI/CD → Docker Image → AWS ECR
+                                                           ↓
+                                                      AWS ECS Fargate
+                                                           ↓
+                                                  FastAPI App Container
+                                                           ↓
+                                                   PostgreSQL (RDS)
+                                                           ↓
+                                                Monitoring via CloudWatch
+                                                
