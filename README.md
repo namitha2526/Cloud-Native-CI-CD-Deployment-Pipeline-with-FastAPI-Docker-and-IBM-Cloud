@@ -1,53 +1,62 @@
-## Cloud-Native DevOps Pipeline: FastAPI + PostgreSQL + Docker + AWS (ECR/ECS) + GitHub Actions
+## Cloud-Native CI/CD Deployment Pipeline: FastAPI · PostgreSQL · Docker · GitHub Actions · IBM Cloud
 
-A production-focused DevOps project that implements a fully automated CI/CD pipeline for a FastAPI microservice. The application is containerized with Docker, tested with GitHub Actions, and deployed to AWS ECS (Fargate) using images stored in Amazon ECR. PostgreSQL is used locally via Docker and in production via AWS RDS, ensuring consistency across environments.
+A fully automated DevOps pipeline that builds, tests, containerizes, and deploys a FastAPI microservice using Docker and IBM Cloud. The application runs inside containers, with code automatically deployed from GitHub to production. PostgreSQL is used as the persistent data store. The pipeline leverages IBM Cloud Container Registry, IBM Cloud Code Engine, and GitHub Actions — all deployable under free-tier conditions.
 
 ---
 #### 📌Features:
 
-1. FastAPI backend with modular architecture
+1. FastAPI backend with modular design (CRUD endpoints, user management)
 
-2. PostgreSQL database integration (local & cloud)
+2. PostgreSQL database — local (via Docker) or cloud-hosted via container
 
-3. Full containerization with Docker & docker-compose
+3. Docker + Docker Compose for containerization and local development
 
-4. Automated CI/CD pipeline using GitHub Actions
+4. Automated CI/CD pipeline using GitHub Actions (test → build → push → deploy)
 
-5. Docker image publishing to AWS ECR
+5. Container image storage via IBM Cloud Container Registry
 
-6. Zero-downtime deployment on AWS ECS Fargate
+6. Deployment to IBM Cloud Code Engine (serverless container hosting) — scales automatically and supports container images built from source or registry images
 
 7. API testing using Postman/Newman
 
-8. Cloud monitoring via CloudWatch
+8. Clean environment-based configuration, easy local development and cloud deployment
 
 ---
 #### Architecture:
 ```
-Developer → GitHub → GitHub Actions CI/CD → Docker Image → AWS ECR
-                                                           ↓
-                                                      AWS ECS Fargate
-                                                           ↓
-                                                  FastAPI App Container
-                                                           ↓
-                                                   PostgreSQL (RDS)
-                                                           ↓
-                                                Monitoring via CloudWatc
+GitHub → GitHub Actions → Run Tests → Build Docker Image → Push to IBM Container Registry
+                                                                       ↓
+                                                      Deploy to IBM Cloud Code Engine
+                                                                       ↓
+                                        FastAPI Service Container + PostgreSQL Container
+                                                                       ↓
+                                                       Persistent Data & API Exposure
+
 ```
-                                                
+Code changes trigger GitHub Actions.
+
+Successful builds produce container images pushed to IBM Cloud Container Registry.
+
+Code Engine pulls the image, deploys the container, and exposes a public endpoint.
+
+Postgres runs alongside (in another container) or can be replaced with a managed solution.     
+
 ---
 #### Tech Stack:
 
-Backend: FastAPI, Python, SQLAlchemy
+```
+| Layer              | Technology                                                               |
+| ------------------ | ------------------------------------------------------------------------ |
+| Backend            | FastAPI, Python, SQLAlchemy                                              |
+| Database           | PostgreSQL (Docker / IBM Cloud container)                                |
+| Containerization   | Docker, Docker Compose                                                   |
+| CI/CD              | GitHub Actions                                                           |
+| Container Registry | IBM Cloud Container Registry                                             |
+| Cloud Hosting      | IBM Cloud Code Engine (auto-scaling, serverless)                         |
+| Testing            | Pytest, Postman / Newman                                                 |
+| CI/CD Flow         | On Git commit → build & test → push Docker image → deploy to Code Engine |
 
-Database: PostgreSQL, AWS RDS
-
-DevOps / Cloud: Docker, Docker Compose, GitHub Actions, AWS ECR, AWS ECS (Fargate), IAM, CloudWatch
-
-Testing: Pytest, Postman/Newman
-
-CI/CD: Automated test → build → ECR push → ECS deploy
-
+```
 ---
 #### Project Structure:
 ```
@@ -104,13 +113,13 @@ The GitHub Actions pipeline automatically:
 ---
 #### Required GitHub Secrets:
 ```
-AWS_ACCESS_KEY_ID
-AWS_SECRET_ACCESS_KEY
-AWS_REGION
-AWS_ACCOUNT_ID
-ECR_REPOSITORY
-ECS_CLUSTER
-ECS_SERVICE
+IBM_CLOUD_API_KEY
+IBM_CR_REGION
+IBM_CR_NAMESPACE
+IBM_CR_REPOSITORY
+IBM_CE_PROJECT
+IBM_CE_APP_NAME
+DATABASE_URL   (optional)
 ```
 #### Production Notes:
 
