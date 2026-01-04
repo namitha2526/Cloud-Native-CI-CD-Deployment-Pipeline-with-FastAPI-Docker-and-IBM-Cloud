@@ -1,0 +1,72 @@
+name: CI-CD
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r app/requirements.txt
+
+      - name: Run tests
+        run: |
+          pytest -q
+
+  build_and_deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build, tag, and push Docker image to ECR
+        env:
+          ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
+          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+        run: |
+          IMAGE_TAG=${GITHUB_SHA::8}
+          REPO_URI=${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPOSITORY}
+          docker build -t ${REPO_URI}:${IMAGE_TAG} .
+          docker push ${REPO_URI}:${IMAGE_TAG}
+          echo "IMAGE_URI=${REPO_URI}:${IMAGE_TAG}" >> $GITHUB_ENV
+
+      - name: Update ECS service (force new deployment)
+        env:
+          CLUSTER: ${{ secrets.ECS_CLUSTER }}
+          SERVICE: ${{ secrets.ECS_SERVICE }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+        run: |
+          # Create a new task definition revision by copying current and updating container image
+          TASK_DEF_JSON=$(aws ecs describe-task-definition --task-definition $(aws ecs list-task-definitions --family-prefix ${SERVICE} --query 'taskDefinitionArns[-1]' --output text) --region ${AWS_REGION})
+          # Get the latest family name
+          FAMILY=$(echo "$TASK_DEF_JSON" | jq -r '.taskDefinition.family')
+          # Register new task definition with updated image
+          NEW_TASK_DEF=$(echo "$TASK_DEF_JSON" | jq --arg IMAGE "$IMAGE_URI" '.taskDefinition | {family: .family, networkMode: .networkMode, containerDefinitions: .containerDefinitions} | .containerDefinitions[0].image=$IMAGE')
+          echo "$NEW_TASK_DEF" > new-task.json
+          aws ecs register-task-definition --cli-input-json file://new-task.json --region ${AWS_REGION}
+          # Force new deployment
+          aws ecs update-service --cluster ${CLUSTER} --service ${SERVICE} --force-new-deployment --region ${AWS_REGION}
