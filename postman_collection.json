@@ -1,0 +1,32 @@
+{
+  "info": { "name": "DevOps Demo API", "_postman_id": "devops-demo", "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json" },
+  "item": [
+    {
+      "name": "Root",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "http://{{base_url}}/", "host": ["http://{{base_url}}"], "path": [""] }
+      }
+    },
+    {
+      "name": "Register user",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\"email\":\"test@example.com\",\"full_name\":\"Test User\",\"password\":\"password123\"}" },
+        "url": { "raw": "http://{{base_url}}/register", "host": ["http://{{base_url}}"], "path": ["register"] }
+      }
+    },
+    {
+      "name": "Login",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\"email\":\"test@example.com\",\"password\":\"password123\"}" },
+        "url": { "raw": "http://{{base_url}}/login", "host": ["http://{{base_url}}"], "path": ["login"] }
+      }
+    }
+  ],
+  "variable": [{ "key": "base_url", "value": "localhost:8000" }]
+}
