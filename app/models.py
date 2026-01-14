@@ -92,4 +92,12 @@ class Inventory(Base):
     quantity_available = Column(Integer, nullable=False)
     last_updated = Column(DateTime(timezone=True), onupdate=func.now(), server_default=func.now())
     created_at = Column(DateTime(timezone=True), server_default=func.now())
+class Supplier(Base):
+    __tablename__ = "suppliers"
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, nullable=False)
+    contact_email = Column(String, nullable=True)
+    phone_number = Column(String, nullable=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
