@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
-from .app import crud
+from . import crud
 from . import models
 from . import schemas
 from .database import engine, Base, get_db
@@ -36,3 +36,4 @@ def get_user(user_id: int, db: Session = Depends(get_db)):
     if not u:
         raise HTTPException(status_code=404, detail="User not found")
     return u
+
