@@ -38,4 +38,24 @@ def get_user(user_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="User not found")
     return u
 
+@app.post("/analyze", response_model=schemas.AnalysisOutput)
+def analyze(data: schemas.AnalysisInput):
+    tech_score = intelligence.calculate_technical_score(
+        data.repo_data.dict()
+    )
+
+    cognitive_profile = intelligence.calculate_cognitive_profile(
+        data.cognitive_test.dict()
+    )
+
+    recommendation = intelligence.generate_recommendation(
+        tech_score,
+        cognitive_profile["overall_cognitive_score"]
+    )
+
+    return {
+        "technical_score": tech_score,
+        "cognitive_profile": cognitive_profile,
+        "recommended_career_path": recommendation
+    }
 
