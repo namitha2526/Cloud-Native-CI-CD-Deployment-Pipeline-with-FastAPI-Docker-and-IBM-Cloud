@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from . import crud
 from . import models
 from . import schemas
+from . import intelligence
 from .database import engine, Base, get_db
 from .config import settings
 
@@ -36,4 +37,5 @@ def get_user(user_id: int, db: Session = Depends(get_db)):
     if not u:
         raise HTTPException(status_code=404, detail="User not found")
     return u
+
 
