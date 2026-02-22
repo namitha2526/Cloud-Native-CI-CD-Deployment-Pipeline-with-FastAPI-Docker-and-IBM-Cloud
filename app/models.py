@@ -1,5 +1,20 @@
 from sqlalchemy import Column, Integer, String, Boolean, DateTime, func
 from .database import Base
+from sqlalchemy import Column, Integer, Float, ForeignKey, String
+from sqlalchemy.orm import relationship
+from .database import Base
+
+class Analysis(Base):
+    __tablename__ = "analyses"
+
+    id = Column(Integer, primary_key=True, index=True)
+    technical_score = Column(Float)
+    cognitive_score = Column(Float)
+    recommended_career_path = Column(String)
+
+    user_id = Column(Integer, ForeignKey("users.id"))
+
+    user = relationship("User")
 
 class User(Base):
     __tablename__ = "users"
@@ -109,6 +124,7 @@ class Coupon(Base):
     valid_to = Column(DateTime(timezone=True), nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+
 
 
 
