@@ -5,6 +5,7 @@ from . import crud
 from . import models
 from . import schemas
 from . import intelligence
+response_model=schemas.AnalysisOutput
 from .database import engine, Base, get_db
 from .config import settings
 
@@ -58,4 +59,5 @@ def analyze(data: schemas.AnalysisInput):
         "cognitive_profile": cognitive_profile,
         "recommended_career_path": recommendation
     }
+
 
