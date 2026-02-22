@@ -24,3 +24,19 @@ def authenticate_user(db: Session, email: str, password: str):
     if not pwd_context.verify(password, user.hashed_password):
         return None
     return user
+from . import models
+
+def create_analysis(db, user_id, tech_score, cognitive_score, recommendation):
+    analysis = models.Analysis(
+        technical_score=tech_score,
+        cognitive_score=cognitive_score,
+        recommended_career_path=recommendation,
+        user_id=user_id
+    )
+    db.add(analysis)
+    db.commit()
+    db.refresh(analysis)
+    return analysis
+
+def get_user_analyses(db, user_id):
+    return db.query(models.Analysis).filter(models.Analysis.user_id == user_id).all()
