@@ -1,43 +1,141 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Student Roadmap App</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>RoadmapHub – Student Tech Roadmaps</title>
+
+<link rel="stylesheet" href="style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
 </head>
+
 <body>
 
- <!-- Navbar -->
-  <div class="navbar">
-    <h2>🎓 RoadmapHub</h2>
-    <div>
-      <a href="#">Home</a>
-      <a href="#">Roadmaps</a>
-      <a href="#">About</a>
-    </div>
-  </div>
+<!-- NAVBAR -->
+<header class="navbar">
 
-  <!-- Hero Section -->
-  <div class="hero">
-    <h1>Find Your Tech Roadmap</h1>
-    <p>Learn from students who already achieved what you're aiming for.</p>
-    <button onclick="callBackend()">Load Roadmaps</button>
-  </div>
+<div class="logo">
+🚀 RoadmapHub
+</div>
 
-  <!-- Roadmaps Section -->
-  <div class="section">
-    <h2>📌 Featured Roadmaps</h2>
-    <div id="roadmap-container" class="cards"></div>
-  </div>
+<nav>
+<a href="#">Home</a>
+<a href="#">Explore</a>
+<a href="#">Community</a>
+<a href="#">About</a>
+</nav>
 
-  <!-- Submit Section -->
-  <div class="section">
-    <h2>✍️ Submit a Roadmap</h2>
-    <input type="text" id="name" placeholder="Your name">
-    <input type="text" id="title" placeholder="Roadmap title">
-    <textarea id="description" placeholder="Describe your roadmap..."></textarea>
-    <button onclick="addRoadmap()">Submit</button>
-  </div>
+<div class="nav-actions">
+<button class="login">Login</button>
+<button class="submit-btn" onclick="openModal()">Submit Roadmap</button>
+</div>
 
-  <script src="script.js"></script>
+</header>
+
+<!-- HERO SECTION -->
+
+<section class="hero">
+
+<div class="hero-content">
+
+<h1>Discover the Best Tech Learning Roadmaps</h1>
+
+<p>
+Explore curated learning paths created by students and professionals  
+to master skills like AI, Full-Stack Development, DevOps, and Data Science.
+</p>
+
+<div class="hero-actions">
+<button class="primary" onclick="callBackend()">Explore Roadmaps</button>
+<button class="secondary">How it Works</button>
+</div>
+
+</div>
+
+</section>
+
+<!-- SEARCH SECTION -->
+
+<section class="search-section">
+
+<input type="text" placeholder="Search roadmaps (AI, DevOps, Web, ML...)">
+
+<select>
+<option>All Categories</option>
+<option>AI / ML</option>
+<option>Web Development</option>
+<option>DevOps</option>
+<option>Data Science</option>
+<option>Cybersecurity</option>
+</select>
+
+<button>Search</button>
+
+</section>
+
+<!-- ROADMAPS -->
+
+<section class="roadmaps">
+
+<h2>🔥 Featured Roadmaps</h2>
+
+<div id="roadmap-container" class="roadmap-grid">
+
+<!-- Dynamic cards inserted here -->
+
+</div>
+
+</section>
+
+<!-- SUBMIT MODAL -->
+
+<div id="modal" class="modal">
+
+<div class="modal-content">
+
+<span class="close" onclick="closeModal()">×</span>
+
+<h2>Submit Your Roadmap</h2>
+
+<input type="text" id="name" placeholder="Your Name">
+
+<input type="text" id="title" placeholder="Roadmap Title">
+
+<select id="category">
+<option>Select Category</option>
+<option>AI / ML</option>
+<option>Web Development</option>
+<option>DevOps</option>
+<option>Data Science</option>
+<option>Cybersecurity</option>
+</select>
+
+<textarea id="description" placeholder="Describe your roadmap"></textarea>
+
+<button onclick="addRoadmap()">Submit Roadmap</button>
+
+</div>
+
+</div>
+
+<!-- FOOTER -->
+
+<footer>
+
+<p>© 2026 RoadmapHub — Built for students by students</p>
+
+<div class="footer-links">
+<a href="#">Privacy</a>
+<a href="#">Terms</a>
+<a href="#">Contact</a>
+</div>
+
+</footer>
+
+<script src="script.js"></script>
+
 </body>
 </html>
