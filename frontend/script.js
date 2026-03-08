@@ -1,43 +1,78 @@
-const container = document.getElementById("roadmap-container");
+const container = document.getElementById("roadmap-container")
 
-async function callBackend() {
-  try {
-    const res = await fetch("https://your-techie.onrender.com/");
-    const data = await res.json();
+function callBackend(){
 
-    // Example display (adjust if API returns array)
-    container.innerHTML = `
-      <div class="card">
-        <h3>Backend Response</h3>
-        <p>${JSON.stringify(data)}</p>
-      </div>
-    `;
-  } catch (err) {
-    container.innerHTML = `<p>Error connecting to backend</p>`;
-  }
+const data = [
+{
+title:"AI Engineer Roadmap",
+description:"Learn Python, ML, Deep Learning, and deploy AI systems.",
+category:"AI/ML"
+},
+
+{
+title:"Full Stack Developer",
+description:"Master HTML, CSS, JS, React, Node, and databases.",
+category:"Web Dev"
+},
+
+{
+title:"DevOps Engineer",
+description:"Learn Docker, Kubernetes, CI/CD pipelines and cloud.",
+category:"DevOps"
+}
+]
+
+container.innerHTML=""
+
+data.forEach(roadmap=>{
+
+const card=document.createElement("div")
+card.className="card"
+
+card.innerHTML=`
+<div class="tag">${roadmap.category}</div>
+<h3>${roadmap.title}</h3>
+<p>${roadmap.description}</p>
+`
+
+container.appendChild(card)
+
+})
+
 }
 
-function addRoadmap() {
-  const name = document.getElementById("name").value;
-  const title = document.getElementById("title").value;
-  const desc = document.getElementById("description").value;
+/* MODAL */
 
-  if (!name || !title || !desc) {
-    alert("Fill all fields");
-    return;
-  }
+function openModal(){
+document.getElementById("modal").style.display="flex"
+}
 
-  const card = `
-    <div class="card">
-      <h3>${title}</h3>
-      <p>${desc}</p>
-      <small>By ${name}</small>
-    </div>
-  `;
+function closeModal(){
+document.getElementById("modal").style.display="none"
+}
 
-  container.innerHTML += card;
+/* ADD ROADMAP */
 
-  document.getElementById("name").value = "";
-  document.getElementById("title").value = "";
-  document.getElementById("description").value = "";
+function addRoadmap(){
+
+const name=document.getElementById("name").value
+const title=document.getElementById("title").value
+const desc=document.getElementById("description").value
+const category=document.getElementById("category").value
+
+const card=document.createElement("div")
+
+card.className="card"
+
+card.innerHTML=`
+<div class="tag">${category}</div>
+<h3>${title}</h3>
+<p>${desc}</p>
+<small>Submitted by ${name}</small>
+`
+
+container.appendChild(card)
+
+closeModal()
+
 }
